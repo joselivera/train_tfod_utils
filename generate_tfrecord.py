@@ -11,7 +11,7 @@ python generate_tfrecord.py --label=<LABEL> --csv_input=<PATH_TO_ANNOTATIONS_FOL
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
-
+from object_detection.utils import dataset_util, label_map_util
 import os
 import io
 import pandas as pd
@@ -34,19 +34,13 @@ flags.DEFINE_string('label', '', 'Name of class label')
 flags.DEFINE_string('img_path', '', 'Path to images')
 FLAGS = flags.FLAGS
 
+label_map = label_map_util.load_labelmap(args.labels_path)
+label_map_dict = label_map_util.get_label_map_dict(label_map)
 
 # TO-DO replace this with label map
 # for multiple labels add more else if statements
 def class_text_to_int(row_label):
-    if row_label == FLAGS.label:  # 'ship':
-        return 1
-    # comment upper if statement and uncomment these statements for multiple labelling
-    # if row_label == FLAGS.label0:
-    #   return 1
-    # elif row_label == FLAGS.label1:
-    #   return 0
-    else:
-        None
+    return label_map_dict[row_label]
 
 
 def split(df, group):
